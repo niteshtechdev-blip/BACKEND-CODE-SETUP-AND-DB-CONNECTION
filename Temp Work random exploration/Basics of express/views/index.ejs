@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        :root {
+  --accent: #f7a600;
+  --accent-dark: #c77900;
+  --text: #111111;
+  --text-nav: #fff;
+  --muted: #707070;
+  --white: #ffffff;
+
+  --site-x: clamp(1.25rem, 5vw, 5rem);
+  --header-height: 88px;
+  --orbit-size: clamp(480px, 90vh, 740px);
+  --main-size: clamp(190px, 80vh, 330px);
+  --thumb-size: 120px;
+  --active-angle: 0deg;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background: var(--white);
+  font-family: "Roboto", sans-serif;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) #f1f1f1;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+a,
+label {
+  cursor: pointer;
+}
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  min-height: var(--header-height);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 4rem);
+  padding: 1rem var(--site-x);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.nav-links {
+  justify-self: center;
+}
+
+.nav-list,
+.social {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 4.5rem);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-list a {
+  color: #f7a600;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.nav-list a:hover,
+.nav-list a:focus-visible {
+  color: var(--text-nav);
+  outline: none;
+}
+
+.cart-button {
+  position: relative;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: #d6dde5;
+  transition: 0.2s ease;
+}
+
+.cart-button-value {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  background-color: #f7a600;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.cart-button:hover,
+.cart-button:focus-visible {
+  background: rgb(255 255 255 / 0.75);
+}
+
+/* Slider shell */
+
+.food-slider {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 70% 60%,
+    #89a4cb 0%,
+    #2f68b5 30%,
+    #2f68b5 60%,
+    rgb(8 83 162) 100%
+  );
+}
+
+.food-slider::before {
+  content: "";
+  position: absolute;
+  right: -10%;
+  inset: 0;
+  background: var(--white);
+  mask: radial-gradient(circle at 70% -35%, transparent 0 49.92%, #000 50%);
+  z-index: 5;
+}
+
+.slider-state {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.food-slider__inner {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(480px, 1.4fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  min-height: 100vh;
+  padding: calc(var(--header-height) + 1rem) var(--site-x) 5rem;
+}
+
+/* Text */
+
+.dish-content {
+  position: relative;
+  z-index: 7;
+  min-height: 390px;
+}
+
+.dish-panel {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: min(100%, 430px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-24px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+}
+
+.dish-price {
+  margin: 0 0 1rem;
+  color: var(--accent);
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: 0.12em;
+}
+
+.dish-panel h2 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(2.15rem, 4vw, 3.35rem);
+  line-height: 1.08;
+  font-family: "Courgette", cursive;
+  letter-spacing: 0.01em;
+}
+
+.dish-panel p:not(.dish-price) {
+  max-width: 36ch;
+  margin: 0 0 2rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.dish-panel button {
+  position: relative;
+  min-width: 190px;
+  min-height: 56px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.4rem;
+  color: var(--white);
+  background: var(--accent);
+  font-size: 18px;
+  font-family: serif;
+  font-weight: 700;
+  box-shadow: 0 18px 36px rgb(247 166 0 / 0.3);
+  transition: all 0.2s ease;
+}
+
+.dish-panel button:before {
+  content: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/cart.svg");
+  position: absolute;
+  left: 15px;
+  top: 10px;
+  width: 34px;
+  height: 34px;
+
+  object-fit: cover;
+}
+
+.dish-panel button:hover,
+.dish-panel button:focus-visible {
+  background: var(--accent-dark);
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgb(247 166 0 / 0.4);
+}
+
+/* Scene */
+
+.dish-scene {
+  position: relative;
+  min-height: min(680px, 76vh);
+}
+
+.dish-main {
+  position: absolute;
+
+  left: 50%;
+  top: 58%;
+  width: var(--main-size);
+  height: var(--main-size);
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  filter: drop-shadow(0 28px 30px rgb(0 0 0 / 0.3));
+  z-index: 6;
+  border: 0;
+  background: transparent;
+}
+
+.main-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(0.92) rotate(-4deg);
+  transition: opacity 0.35s ease, transform 0.45s ease;
+}
+/* Dish image popover buttons for all recipes */
+.dish-scene .dish-main {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0.35s ease, filter 0.2s ease;
+}
+
+.dish-scene .dish-main:hover,
+.dish-scene .dish-main:focus-visible {
+  filter: drop-shadow(0 32px 34px rgb(0 0 0 / 0.36));
+}
+
+.dish-main .main-image {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+#dish-1:checked ~ .food-slider__inner .dish-main-1,
+#dish-2:checked ~ .food-slider__inner .dish-main-2,
+#dish-3:checked ~ .food-slider__inner .dish-main-3,
+#dish-4:checked ~ .food-slider__inner .dish-main-4,
+#dish-5:checked ~ .food-slider__inner .dish-main-5,
+#dish-6:checked ~ .food-slider__inner .dish-main-6,
+#dish-7:checked ~ .food-slider__inner .dish-main-7,
+#dish-8:checked ~ .food-slider__inner .dish-main-8,
+#dish-9:checked ~ .food-slider__inner .dish-main-9,
+#dish-10:checked ~ .food-slider__inner .dish-main-10,
+#dish-11:checked ~ .food-slider__inner .dish-main-11,
+#dish-12:checked ~ .food-slider__inner .dish-main-12 {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.popup[popover] {
+  z-index: 100;
+}
+
+.recipe-card__media {
+  display: flex;
+  justify-content: center;
+}
+
+/* Orbit */
+
+.dish-orbit {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: var(--orbit-size);
+  height: var(--orbit-size);
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0) rotate(var(--active-angle));
+  transition: transform 0.75s cubic-bezier(0.22, 0.8, 0.22, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  border: 2px dashed #cf901f;
+  z-index: 3;
+}
+
+.orbit-item {
+  --angle: calc(var(--i) * 30deg);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  margin: calc(var(--thumb-size) / -2);
+  transform: rotate(var(--angle)) translateY(calc(var(--orbit-size) / -2))
+    rotate(calc(-1 * var(--angle)));
+  backface-visibility: hidden;
+}
+
+.orbit-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(calc(-1 * var(--active-angle)));
+  transition: transform 0.75s cubic-bezier(0.22, 0.8, 0.22, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.orbit-thumb img {
+  width: 124%;
+  height: 124%;
+  margin: -12%;
+  object-fit: contain;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  pointer-events: none;
+}
+
+/* Checked states */
+
+#dish-1:checked ~ .food-slider__inner {
+  --active-angle: 0deg;
+}
+
+#dish-2:checked ~ .food-slider__inner {
+  --active-angle: -30deg;
+}
+
+#dish-3:checked ~ .food-slider__inner {
+  --active-angle: -60deg;
+}
+
+#dish-4:checked ~ .food-slider__inner {
+  --active-angle: -90deg;
+}
+
+#dish-5:checked ~ .food-slider__inner {
+  --active-angle: -120deg;
+}
+
+#dish-6:checked ~ .food-slider__inner {
+  --active-angle: -150deg;
+}
+
+#dish-7:checked ~ .food-slider__inner {
+  --active-angle: -180deg;
+}
+
+#dish-8:checked ~ .food-slider__inner {
+  --active-angle: -210deg;
+}
+
+#dish-9:checked ~ .food-slider__inner {
+  --active-angle: -240deg;
+}
+
+#dish-10:checked ~ .food-slider__inner {
+  --active-angle: -270deg;
+}
+
+#dish-11:checked ~ .food-slider__inner {
+  --active-angle: -300deg;
+}
+
+#dish-12:checked ~ .food-slider__inner {
+  --active-angle: -330deg;
+}
+
+#dish-1:checked ~ .food-slider__inner .dish-panel-1,
+#dish-2:checked ~ .food-slider__inner .dish-panel-2,
+#dish-3:checked ~ .food-slider__inner .dish-panel-3,
+#dish-4:checked ~ .food-slider__inner .dish-panel-4,
+#dish-5:checked ~ .food-slider__inner .dish-panel-5,
+#dish-6:checked ~ .food-slider__inner .dish-panel-6,
+#dish-7:checked ~ .food-slider__inner .dish-panel-7,
+#dish-8:checked ~ .food-slider__inner .dish-panel-8,
+#dish-9:checked ~ .food-slider__inner .dish-panel-9,
+#dish-10:checked ~ .food-slider__inner .dish-panel-10,
+#dish-11:checked ~ .food-slider__inner .dish-panel-11,
+#dish-12:checked ~ .food-slider__inner .dish-panel-12 {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+#dish-1:checked ~ .food-slider__inner .main-image-1,
+#dish-2:checked ~ .food-slider__inner .main-image-2,
+#dish-3:checked ~ .food-slider__inner .main-image-3,
+#dish-4:checked ~ .food-slider__inner .main-image-4,
+#dish-5:checked ~ .food-slider__inner .main-image-5,
+#dish-6:checked ~ .food-slider__inner .main-image-6,
+#dish-7:checked ~ .food-slider__inner .main-image-7,
+#dish-8:checked ~ .food-slider__inner .main-image-8,
+#dish-9:checked ~ .food-slider__inner .main-image-9,
+#dish-10:checked ~ .food-slider__inner .main-image-10,
+#dish-11:checked ~ .food-slider__inner .main-image-11,
+#dish-12:checked ~ .food-slider__inner .main-image-12 {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* Navigation */
+
+.slider-nav {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 13%;
+  width: min(520px, 70%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.nav-arrow {
+  position: absolute;
+  top: 0;
+  display: none;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--white);
+  pointer-events: auto;
+  box-shadow: 0 10px 12px rgb(0 0 0 / 0.8);
+  transition: 0.2s ease;
+}
+
+.nav-arrow::before {
+  content: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/arrow.svg");
+  object-fit: contain;
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+}
+
+.nav-arrow:hover,
+.nav-arrow:focus-visible {
+  transform: translateY(-2px);
+  outline: 2px solid rgb(247 166 0 / 0.3);
+}
+
+.nav-prev {
+  left: 0;
+}
+
+.nav-next {
+  right: 0;
+}
+
+#dish-1:checked ~ .food-slider__inner .nav-from-1,
+#dish-2:checked ~ .food-slider__inner .nav-from-2,
+#dish-3:checked ~ .food-slider__inner .nav-from-3,
+#dish-4:checked ~ .food-slider__inner .nav-from-4,
+#dish-5:checked ~ .food-slider__inner .nav-from-5,
+#dish-6:checked ~ .food-slider__inner .nav-from-6,
+#dish-7:checked ~ .food-slider__inner .nav-from-7,
+#dish-8:checked ~ .food-slider__inner .nav-from-8,
+#dish-9:checked ~ .food-slider__inner .nav-from-9,
+#dish-10:checked ~ .food-slider__inner .nav-from-10,
+#dish-11:checked ~ .food-slider__inner .nav-from-11,
+#dish-12:checked ~ .food-slider__inner .nav-from-12 {
+  display: block;
+}
+
+.decor-element {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  width: 15vw;
+  opacity: 0.3;
+}
+
+/* Footer */
+
+.site-footer {
+  position: fixed;
+  z-index: 45;
+  right: var(--site-x);
+  bottom: 2rem;
+}
+
+.social {
+  gap: 1.5rem;
+}
+
+.social a {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  min-height: 26px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+/* Main dish popover trigger */
+
+.dish-main {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dish-main:focus-visible {
+  outline: 3px solid rgb(247 166 0 / 0.55);
+  outline-offset: 12px;
+}
+
+.main-image {
+  pointer-events: none;
+}
+
+/* Recipe popup */
+
+.popup[popover] {
+  position: fixed;
+  inset: 0;
+  width: min(600px, calc(100vw - 2rem));
+  max-height: min(680px, calc(100dvh - 2rem));
+  margin: auto;
+  padding: 0;
+
+  border: 8px solid #e9e9e7;
+  border-radius: 28px;
+
+  background: #f9f1e5;
+  overflow: hidden;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/pattern.svg")
+      50% 50% repeat;
+    background-size: contain;
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/pattern.svg")
+      50% 50% repeat;
+    background-size: contain;
+  }
+}
+
+.popup[popover]::backdrop {
+  background: rgb(8 26 48 / 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.btn-close {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--text);
+  font-size: 1.65rem;
+  line-height: 1;
+  box-shadow: 0 12px 26px rgb(0 0 0 / 0.14);
+  transition: 0.2s ease;
+}
+
+.btn-close:hover,
+.btn-close:focus-visible {
+  color: var(--white);
+  background: var(--accent);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: clamp(1.35rem, 3vw, 2.2rem);
+  max-height: min(760px, calc(100dvh - 2rem));
+  overflow: auto;
+  margin-right: 12px;
+  padding-right: 12px;
+  padding-bottom: 84px;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) #f1f1f1;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 6px;
+    border: 3px solid #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-dark);
+  }
+}
+
+.recipe-card__hero {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.86fr) minmax(260px, 1.14fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+  padding-bottom: clamp(1.25rem, 3vw, 2rem);
+  border-bottom: 1px solid rgb(207 144 31 / 0.22);
+}
+
+.recipe-card__img {
+  max-width: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 28px rgb(0 0 0 / 0.2));
+}
+
+.recipe-card__eyebrow {
+  text-align: center;
+  margin: 0 0 0.65rem;
+  color: var(--accent-dark);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.recipe-card__title {
+  position: relative;
+  margin: 0 0 30px;
+  color: var(--text);
+  font-family: "Courgette", cursive;
+  font-size: 29px;
+  text-align: center;
+  line-height: 1.05;
+  padding-bottom: 20px;
+  white-space: nowrap;
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    border-bottom: 1px solid #9d784e;
+  }
+
+  &:after {
+    content: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/decor-big.svg");
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    object-fit: contain;
+    width: 140px;
+    height: 40px;
+  }
+}
+
+.recipe-card__text {
+  max-width: 38ch;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.recipe-card__content {
+  border-top: 1px solid #9d784e;
+  padding: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.25rem, 4vw, 3rem);
+}
+
+.recipe-card__subtitle {
+  width: fit-content;
+  position: relative;
+  margin: 0 auto 1rem;
+  color: var(--text);
+  font-family: "Courgette", cursive;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.2;
+}
+
+.recipe-card__subtitle::before,
+.recipe-card__subtitle::after {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  content: "";
+  background-image: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/decor-elem.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  transform: translateY(-50%);
+}
+
+.recipe-card__subtitle::before {
+  left: -30px;
+}
+
+.recipe-card__subtitle::after {
+  right: -30px;
+}
+
+.recipe-card__section {
+  position: relative;
+  height: 224px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 6px;
+    border: 3px solid #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-dark);
+  }
+}
+
+.recipe-card__left {
+  direction: rtl;
+}
+
+.recipe-card__right {
+  direction: ltr;
+}
+
+.recipe-list {
+  margin: 0;
+  padding: 0;
+  color: #3f3f3f;
+  line-height: 1.75;
+}
+
+.recipe-list--bullets {
+  list-style: none;
+  padding-left: 30px;
+}
+
+.recipe-list--bullets li {
+  position: relative;
+  padding-left: 15px;
+}
+
+.recipe-list--bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #bd7c10;
+}
+
+.recipe-list--steps {
+  list-style: none;
+  counter-reset: recipe-step;
+}
+
+.recipe-list--steps li {
+  position: relative;
+  min-height: 2rem;
+  padding-left: 2.5rem;
+  counter-increment: recipe-step;
+}
+
+.recipe-list--steps li::before {
+  content: counter(recipe-step);
+  position: absolute;
+  left: 0;
+  top: 0.18rem;
+  display: grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 50%;
+  color: #000;
+  background: #efe0ca;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.recipe-card__button {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  margin: 10px auto 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  min-height: 54px;
+  border-radius: 50px;
+  padding: 0.85rem 1.6rem;
+  color: var(--white);
+  background: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 18px 36px rgb(247 166 0 / 0.28);
+  transition: 0.2s ease;
+
+  &:before {
+    content: url("https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/recipe-button.svg");
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    z-index: 2;
+  }
+}
+
+.recipe-card__button:hover,
+.recipe-card__button:focus-visible {
+  background: var(--accent-dark);
+  outline: none;
+}
+
+@media (max-width: 980px) {
+  :root {
+    --header-height: 78px;
+    --orbit-size: clamp(360px, 78vw, 620px);
+    --main-size: clamp(170px, 34vw, 260px);
+    --thumb-size: clamp(48px, 8vw, 72px);
+  }
+
+  .site-header {
+    background: rgb(255 255 255 / 0.86);
+    backdrop-filter: blur(12px);
+  }
+
+  .food-slider__inner {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: calc(var(--header-height) + 1rem) 1.25rem 6rem;
+  }
+
+  .dish-scene {
+    order: 1;
+    min-height: 560px;
+  }
+
+  .dish-content {
+    order: 2;
+    min-height: 320px;
+    text-align: center;
+  }
+
+  .dish-panel {
+    left: 50%;
+    transform: translate(-50%, 24px);
+  }
+
+  #dish-1:checked ~ .food-slider__inner .dish-panel-1,
+  #dish-2:checked ~ .food-slider__inner .dish-panel-2,
+  #dish-3:checked ~ .food-slider__inner .dish-panel-3,
+  #dish-4:checked ~ .food-slider__inner .dish-panel-4,
+  #dish-5:checked ~ .food-slider__inner .dish-panel-5,
+  #dish-6:checked ~ .food-slider__inner .dish-panel-6,
+  #dish-7:checked ~ .food-slider__inner .dish-panel-7,
+  #dish-8:checked ~ .food-slider__inner .dish-panel-8,
+  #dish-9:checked ~ .food-slider__inner .dish-panel-9,
+  #dish-10:checked ~ .food-slider__inner .dish-panel-10,
+  #dish-11:checked ~ .food-slider__inner .dish-panel-11,
+  #dish-12:checked ~ .food-slider__inner .dish-panel-12 {
+    transform: translate(-50%, 0);
+  }
+
+  .dish-panel p:not(.dish-price) {
+    margin-inline: auto;
+  }
+
+  .slider-nav {
+    bottom: 8%;
+  }
+
+  .site-footer {
+    position: static;
+    padding: 0 1.25rem 2rem;
+  }
+
+  .social {
+    justify-content: center;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 720px) {
+  .popup[popover] {
+    width: min(94vw, 560px);
+    border-radius: 22px;
+  }
+
+  .recipe-card__hero,
+  .recipe-card__content {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-card__hero {
+    text-align: center;
+  }
+
+  .recipe-card__text {
+    margin-inline: auto;
+  }
+
+  .recipe-card__img {
+    width: min(70vw, 230px);
+  }
+}
+
+@media (max-height: 700px) and (max-width: 991px) {
+  .food-slider::before {
+    mask: radial-gradient(circle at 50% -27%, transparent 0 49.92%, #000 50%);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-height: 72px;
+    --orbit-size: min(330px, 86vw);
+    --main-size: min(168px, 43vw);
+    --thumb-size: min(46px, 12vw);
+  }
+
+  .site-header {
+    gap: 0.15rem;
+    padding: 0.25rem 1rem;
+  }
+
+  .nav-links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-list {
+    justify-content: center;
+    gap: 1.35rem;
+    min-width: max-content;
+  }
+
+  .food-slider {
+    background: radial-gradient(
+      circle at 50% 35%,
+      #89a4cb 0%,
+      #2f68b5 30%,
+      #2f68b5 60%,
+      rgb(8 83 162) 100%
+    );
+  }
+
+  .food-slider::before {
+    top: -18vh;
+    right: -50vw;
+    width: 100vw;
+    height: 100px;
+  }
+
+  .food-slider__inner {
+    padding-top: 132px;
+    padding-inline: 1rem;
+  }
+
+  .dish-scene {
+    min-height: 405px;
+  }
+
+  .dish-orbit,
+  .dish-main {
+    top: 52%;
+  }
+
+  .dish-panel p:not(.dish-price) {
+    color: #fff;
+  }
+
+  .dish-scene::after {
+    width: 110vw;
+    height: 160px;
+  }
+
+  .slider-nav {
+    width: 92%;
+    bottom: 5%;
+  }
+
+  .nav-arrow {
+    width: 48px;
+    height: 48px;
+  }
+
+  .dish-content {
+    min-height: 335px;
+  }
+
+  .dish-panel h2 {
+    font-size: clamp(1.9rem, 9vw, 2.3rem);
+  }
+
+  .dish-price {
+    font-size: clamp(1.85rem, 8vw, 2.2rem);
+  }
+
+  .dish-panel button {
+    min-width: 170px;
+  }
+
+  .dish-panel button:before {
+    left: 6px;
+  }
+
+  .site-footer {
+    padding: 1.25rem 0;
+  }
+
+  .decor-element {
+    width: 70vw;
+
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --orbit-size: 290px;
+    --main-size: 148px;
+    --thumb-size: 40px;
+  }
+
+  .dish-scene {
+    min-height: 360px;
+  }
+
+  .nav-list a {
+    font-size: 0.88rem;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <header class="site-header">
+  <a class="logo" href="#" aria-label="Home">
+    <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/logo.png" width="210" height="70" alt="logo">
+  </a>
+
+  <nav class="nav-links" aria-label="Main navigation">
+    <ul class="nav-list">
+      <li><a href="#">Breakfast</a></li>
+      <li><a href="#">Lunch</a></li>
+      <li><a href="#">Dinner</a></li>
+    </ul>
+  </nav>
+
+  <button type="button" class="cart-button" aria-label="Cart">
+    <span class="cart-button-value">0</span>
+    <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/cart-header.svg" width="25" height="25" alt="cart">
+  </button>
+</header>
+
+<main>
+  <section class="food-slider" aria-label="Featured dishes">
+    <input class="slider-state" type="radio" name="dish" id="dish-1" checked>
+    <input class="slider-state" type="radio" name="dish" id="dish-2">
+    <input class="slider-state" type="radio" name="dish" id="dish-3">
+    <input class="slider-state" type="radio" name="dish" id="dish-4">
+    <input class="slider-state" type="radio" name="dish" id="dish-5">
+    <input class="slider-state" type="radio" name="dish" id="dish-6">
+    <input class="slider-state" type="radio" name="dish" id="dish-7">
+    <input class="slider-state" type="radio" name="dish" id="dish-8">
+    <input class="slider-state" type="radio" name="dish" id="dish-9">
+    <input class="slider-state" type="radio" name="dish" id="dish-10">
+    <input class="slider-state" type="radio" name="dish" id="dish-11">
+    <input class="slider-state" type="radio" name="dish" id="dish-12">
+
+    <div class="food-slider__inner">
+      <div class="dish-content">
+        <article class="dish-panel dish-panel-1" aria-labelledby="dish-title-1">
+          <p class="dish-price">$9</p>
+          <h2 id="dish-title-1">Borscht</h2>
+          <p>A classic beetroot soup with cabbage, potatoes, carrots, and tender meat, traditionally served
+            with sour cream and fresh herbs.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-2" aria-labelledby="dish-title-2">
+          <p class="dish-price">$8</p>
+          <h2 id="dish-title-2">Varenyky </br> with Cheese</h2>
+          <p>Soft Ukrainian dumplings filled with sweet farmer’s cheese, usually served with sour cream,
+            butter, or berry sauce.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-3" aria-labelledby="dish-title-3">
+          <p class="dish-price">$10</p>
+          <h2 id="dish-title-3">Holubtsi</h2>
+          <p>Cabbage rolls stuffed with rice and minced meat, slowly cooked in tomato sauce until tender and
+            flavorful.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-4" aria-labelledby="dish-title-4">
+          <p class="dish-price">$7</p>
+          <h2 id="dish-title-4">Syrnyky</h2>
+          <p>Sweet cottage cheese pancakes, lightly fried and served with sour cream, honey, jam, or fresh
+            berries.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-5" aria-labelledby="dish-title-5">
+          <p class="dish-price">$11</p>
+          <h2 id="dish-title-5">Chicken Kyiv</h2>
+          <p>A crispy breaded chicken cutlet filled with garlic herb butter, one of the most famous dishes
+            associated with Ukraine.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-6" aria-labelledby="dish-title-6">
+          <p class="dish-price">$8</p>
+          <h2 id="dish-title-6">Deruny</h2>
+          <p>Crispy potato pancakes made with grated potatoes and onion, traditionally served hot with sour
+            cream.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-7" aria-labelledby="dish-title-7">
+          <p class="dish-price">$9</p>
+          <h2 id="dish-title-7">Nalysnyky</h2>
+          <p>Thin Ukrainian crepes filled with sweet cheese, meat, mushrooms, or fruit, then baked or served
+            with sour cream.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-8" aria-labelledby="dish-title-8">
+          <p class="dish-price">$12</p>
+          <h2 id="dish-title-8">Kruchenyky</h2>
+          <p>Traditional Ukrainian meat rolls filled with mushrooms, onions, cheese, or vegetables, then
+            braised until tender and rich in flavor.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-9" aria-labelledby="dish-title-9">
+          <p class="dish-price">$10</p>
+          <h2 id="dish-title-9">Banosh</h2>
+          <p>A creamy cornmeal dish from the Carpathians, traditionally served with bryndza cheese, mushrooms,
+            or crispy pork.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-10" aria-labelledby="dish-title-10">
+          <p class="dish-price">$12</p>
+          <h2 id="dish-title-10">Kholodets</h2>
+          <p>A traditional savory meat jelly made from slow-cooked meat broth, usually served chilled with
+            horseradish or mustard.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-11" aria-labelledby="dish-title-11">
+          <p class="dish-price">$8</p>
+          <h2 id="dish-title-11">Pea Soup</h2>
+          <p>A comforting Ukrainian pea soup made with split peas, potatoes, carrots, onions, and smoked meat for a rich homemade flavor.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+
+        <article class="dish-panel dish-panel-12" aria-labelledby="dish-title-12">
+          <p class="dish-price">$7</p>
+          <h2 id="dish-title-12">Tovkanka</h2>
+          <p>A rustic Ukrainian potato dish, mashed with beans, onions, or cracklings, known for its simple
+            ingredients and hearty homemade taste.</p>
+          <button type="button">Add to Cart</button>
+        </article>
+      </div>
+
+      <div class="dish-scene">
+        <button class="dish-main dish-main-1" type="button" popovertarget="popup-recipe-1" aria-label="Open Borscht recipe">
+          <img class="main-image main-image-1" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Borscht.png" alt="Borscht slide 1" loading="eager">
+        </button>
+        <button class="dish-main dish-main-2" type="button" popovertarget="popup-recipe-2" aria-label="Open Varenyky with Cheese recipe">
+          <img class="main-image main-image-2" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Varenyky-with-Cheese.png" alt="Varenyky with Cheese slide 2" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-3" type="button" popovertarget="popup-recipe-3" aria-label="Open Holubtsi recipe">
+          <img class="main-image main-image-3" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Holubtsi.png" alt="Holubtsi slide 3" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-4" type="button" popovertarget="popup-recipe-4" aria-label="Open Syrnyky recipe">
+          <img class="main-image main-image-4" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Syrnyky.png" alt="Syrnyky slide 4" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-5" type="button" popovertarget="popup-recipe-5" aria-label="Open Chicken Kyiv recipe">
+          <img class="main-image main-image-5" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Chicken-Kyiv.png" alt="Chicken Kyiv slide 5" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-6" type="button" popovertarget="popup-recipe-6" aria-label="Open Deruny recipe">
+          <img class="main-image main-image-6" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Deruny.png" alt="Deruny slide 6" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-7" type="button" popovertarget="popup-recipe-7" aria-label="Open Nalysnyky recipe">
+          <img class="main-image main-image-7" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Nalysnyky.png" alt="Nalysnyky slide 7" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-8" type="button" popovertarget="popup-recipe-8" aria-label="Open Kruchenyky recipe">
+          <img class="main-image main-image-8" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Kruchenyky.png" alt="Kruchenyky slide 8" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-9" type="button" popovertarget="popup-recipe-9" aria-label="Open Banosh recipe">
+          <img class="main-image main-image-9" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Banosh.png" alt="Banosh slide 9" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-10" type="button" popovertarget="popup-recipe-10" aria-label="Open Kholodets recipe">
+          <img class="main-image main-image-10" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Kholodets.png" alt="Kholodets slide 10" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-11" type="button" popovertarget="popup-recipe-11" aria-label="Open Pea Soup recipe">
+          <img class="main-image main-image-11" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Pea-Soup.png" alt="Pea Soup slide 11" loading="lazy" decoding="async">
+        </button>
+        <button class="dish-main dish-main-12" type="button" popovertarget="popup-recipe-12" aria-label="Open Tovkanka recipe">
+          <img class="main-image main-image-12" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Tovkanka.png" alt="Tovkanka slide 12" loading="lazy" decoding="async">
+        </button>
+
+        <div class="dish-orbit">
+
+          <div class="orbit-item orbit-item-1" style="--i: 0;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Borscht.png" alt="Borscht">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-2" style="--i: 1;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Varenyky-with-Cheese.png" alt="Varenyky with Cheese" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-3" style="--i: 2;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Holubtsi.png" alt="Holubtsi" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-4" style="--i: 3;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Syrnyky.png" alt="Syrnyky" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-5" style="--i: 4;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Chicken-Kyiv.png" alt="Chicken Kyiv" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-6" style="--i: 5;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Deruny.png" alt="Deruny" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-7" style="--i: 6;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Nalysnyky.png" alt="Nalysnyky" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-8" style="--i: 7;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Kruchenyky.png" alt="Kruchenyky" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-9" style="--i: 8;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Banosh.png" alt="Banosh" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-10" style="--i: 9;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Kholodets.png" alt="Kholodets" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-11" style="--i: 10;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Pea-Soup.png" alt="Pea Soup" loading="lazy" decoding="async">
+            </span>
+          </div>
+          <div class="orbit-item orbit-item-12" style="--i: 11;">
+            <span class="orbit-thumb">
+              <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/Tovkanka.png" alt="Tovkanka" loading="lazy" decoding="async">
+            </span>
+          </div>
+        </div>
+
+        <div class="slider-nav">
+          <label class="nav-arrow nav-prev nav-from-1" for="dish-12" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-2" for="dish-1" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-3" for="dish-2" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-4" for="dish-3" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-5" for="dish-4" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-6" for="dish-5" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-7" for="dish-6" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-8" for="dish-7" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-9" for="dish-8" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-10" for="dish-9" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-11" for="dish-10" aria-label="Previous dish"></label>
+          <label class="nav-arrow nav-prev nav-from-12" for="dish-11" aria-label="Previous dish"></label>
+
+          <label class="nav-arrow nav-next nav-from-1" for="dish-2" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-2" for="dish-3" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-3" for="dish-4" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-4" for="dish-5" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-5" for="dish-6" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-6" for="dish-7" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-7" for="dish-8" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-8" for="dish-9" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-9" for="dish-10" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-10" for="dish-11" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-11" for="dish-12" aria-label="Next dish"></label>
+          <label class="nav-arrow nav-next nav-from-12" for="dish-1" aria-label="Next dish"></label>
+        </div>
+      </div>
+    </div>
+
+    <img class="decor-element" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/core.svg" alt="core">
+  </section>
+</main>
+
+<div class="popup" popover id="popup-recipe-1" aria-labelledby="popup-recipe-title-1">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-1" popovertargetaction="hide" aria-label="Close Borscht recipe popup">×</button>
+
+  <div class="recipe-card popup-item-1">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Borscht.png" alt="A bowl of traditional Ukrainian borscht">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-1">Traditional Borscht</h2>
+        <p class="recipe-card__eyebrow">Authentic Ukrainian Recipe</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-1">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-1">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Beets</li>
+            <li>Cabbage</li>
+            <li>Potatoes</li>
+            <li>Carrots</li>
+            <li>Beef broth</li>
+            <li>Onion</li>
+            <li>Tomato paste</li>
+            <li>Garlic</li>
+            <li>Bay leaf</li>
+            <li>Sour cream and dill</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-1">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-1">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Cook beef broth with bay leaf until rich and aromatic.</li>
+          <li>Sauté beets with onion, carrots, and tomato paste.</li>
+          <li>Add potatoes and cabbage to the broth and simmer until tender.</li>
+          <li>Stir in the beet mixture and garlic, then cook gently for a few minutes.</li>
+          <li>Serve hot with sour cream and fresh dill.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-2" aria-labelledby="popup-recipe-title-2">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-2" popovertargetaction="hide" aria-label="Close Varenyky with Cheese recipe popup">×</button>
+
+  <div class="recipe-card popup-item-2">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Varenyky-with-Cheese.png" alt="Ukrainian varenyky dumplings with cheese">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-2">Varenyky with Cheese</h2>
+        <p class="recipe-card__eyebrow">Traditional Ukrainian Dumplings</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-2">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-2">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Flour</li>
+            <li>Egg</li>
+            <li>Warm water</li>
+            <li>Salt</li>
+            <li>Farmer’s cheese</li>
+            <li>Sugar</li>
+            <li>Butter</li>
+            <li>Sour cream</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-2">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-2">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Mix flour, egg, water, and salt into a soft dough.</li>
+          <li>Mash farmer’s cheese with a little sugar or salt, depending on taste.</li>
+          <li>Roll the dough, cut circles, add filling, and seal the edges well.</li>
+          <li>Boil the varenyky until they float to the surface.</li>
+          <li>Serve with melted butter and sour cream.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-3" aria-labelledby="popup-recipe-title-3">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-3" popovertargetaction="hide" aria-label="Close Holubtsi recipe popup">×</button>
+
+  <div class="recipe-card popup-item-3">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Holubtsi.png" alt="Ukrainian cabbage rolls called holubtsi">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-3">Traditional Holubtsi</h2>
+        <p class="recipe-card__eyebrow">Stuffed Cabbage Rolls</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-3">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-3">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Cabbage leaves</li>
+            <li>Minced pork or beef</li>
+            <li>Rice</li>
+            <li>Onion</li>
+            <li>Carrot</li>
+            <li>Tomato sauce</li>
+            <li>Garlic</li>
+            <li>Salt and pepper</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-3">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-3">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Blanch cabbage leaves until flexible.</li>
+          <li>Mix minced meat with cooked rice, onion, carrot, garlic, salt, and pepper.</li>
+          <li>Wrap the filling tightly in cabbage leaves.</li>
+          <li>Place the rolls in a pot with tomato sauce and a little broth.</li>
+          <li>Simmer slowly until the cabbage is tender and the filling is cooked.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-4" aria-labelledby="popup-recipe-title-4">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-4" popovertargetaction="hide" aria-label="Close Syrnyky recipe popup">×</button>
+
+  <div class="recipe-card popup-item-4">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Syrnyky.png" alt="Ukrainian cottage cheese pancakes called syrnyky">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-4">Classic Syrnyky</h2>
+        <p class="recipe-card__eyebrow">Sweet Cheese Pancakes</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-4">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-4">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Cottage cheese or farmer’s cheese</li>
+            <li>Egg</li>
+            <li>Flour</li>
+            <li>Sugar</li>
+            <li>Vanilla</li>
+            <li>Salt</li>
+            <li>Oil or butter</li>
+            <li>Sour cream or jam</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-4">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-4">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Press excess liquid from the cheese if needed.</li>
+          <li>Mix cheese with egg, sugar, vanilla, salt, and a little flour.</li>
+          <li>Shape small pancakes and lightly coat them with flour.</li>
+          <li>Fry on both sides until golden.</li>
+          <li>Serve warm with sour cream, honey, berries, or jam.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-5" aria-labelledby="popup-recipe-title-5">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-5" popovertargetaction="hide" aria-label="Close Chicken Kyiv recipe popup">×</button>
+
+  <div class="recipe-card popup-item-5">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Chicken-Kyiv.png" alt="Crispy chicken Kyiv with herb butter">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-5">Chicken Kyiv</h2>
+        <p class="recipe-card__eyebrow">Crispy Herb Butter Chicken</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-5">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-5">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Chicken breast</li>
+            <li>Butter</li>
+            <li>Garlic</li>
+            <li>Fresh parsley or dill</li>
+            <li>Eggs</li>
+            <li>Flour</li>
+            <li>Breadcrumbs</li>
+            <li>Salt and pepper</li>
+            <li>Oil for frying</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-5">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-5">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Mix softened butter with garlic, herbs, salt, and pepper, then chill it.</li>
+          <li>Flatten the chicken breast and wrap it around the cold butter.</li>
+          <li>Coat the chicken in flour, egg, and breadcrumbs.</li>
+          <li>Fry until golden and finish cooking gently until the chicken is done.</li>
+          <li>Serve while hot so the herb butter melts inside.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-6" aria-labelledby="popup-recipe-title-6">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-6" popovertargetaction="hide" aria-label="Close Deruny recipe popup">×</button>
+
+  <div class="recipe-card popup-item-6">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Deruny.png" alt="Ukrainian potato pancakes called deruny">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-6">Classic Deruny</h2>
+        <p class="recipe-card__eyebrow">Crispy Potato Pancakes</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-6">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-6">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Potatoes</li>
+            <li>Onion</li>
+            <li>Egg</li>
+            <li>Flour</li>
+            <li>Salt</li>
+            <li>Black pepper</li>
+            <li>Oil</li>
+            <li>Sour cream</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-6">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-6">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Grate potatoes and onion finely.</li>
+          <li>Mix with egg, flour, salt, and pepper.</li>
+          <li>Spoon the mixture into a hot pan with oil.</li>
+          <li>Fry each pancake until crisp and golden on both sides.</li>
+          <li>Serve immediately with sour cream.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-7" aria-labelledby="popup-recipe-title-7">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-7" popovertargetaction="hide" aria-label="Close Nalysnyky recipe popup">×</button>
+
+  <div class="recipe-card popup-item-7">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Nalysnyky.png" alt="Thin Ukrainian crepes called nalysnyky">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-7">Traditional Nalysnyky</h2>
+        <p class="recipe-card__eyebrow">Delicate Ukrainian Crepes</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-7">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-7">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Milk</li>
+            <li>Eggs</li>
+            <li>Flour</li>
+            <li>Sugar</li>
+            <li>Salt</li>
+            <li>Oil or butter</li>
+            <li>Farmer’s cheese</li>
+            <li>Sour cream</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-7">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-7">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Whisk milk, eggs, flour, sugar, and salt into a thin batter.</li>
+          <li>Cook very thin crepes in a lightly greased pan.</li>
+          <li>Fill each crepe with sweet cheese or another traditional filling.</li>
+          <li>Roll or fold the crepes neatly.</li>
+          <li>Warm with butter or bake briefly with sour cream before serving.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-8" aria-labelledby="popup-recipe-title-8">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-8" popovertargetaction="hide" aria-label="Close Kruchenyky recipe popup">×</button>
+
+  <div class="recipe-card popup-item-8">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Kruchenyky.png" alt="Ukrainian meat rolls called kruchenyky">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-8">Ukrainian Kruchenyky</h2>
+        <p class="recipe-card__eyebrow">Braised Meat Rolls</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-8">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-8">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Thin pork or beef slices</li>
+            <li>Mushrooms</li>
+            <li>Onion</li>
+            <li>Garlic</li>
+            <li>Cheese or pickles</li>
+            <li>Broth</li>
+            <li>Sour cream</li>
+            <li>Salt and pepper</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-8">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-8">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Pound meat slices until thin and season them.</li>
+          <li>Prepare a filling with mushrooms, onion, garlic, and optional cheese or pickles.</li>
+          <li>Place filling on each slice, roll tightly, and secure.</li>
+          <li>Brown the rolls in a pan, then add broth and sour cream.</li>
+          <li>Braise until tender and serve with the sauce.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-9" aria-labelledby="popup-recipe-title-9">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-9" popovertargetaction="hide" aria-label="Close Banosh recipe popup">×</button>
+
+  <div class="recipe-card popup-item-9">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Banosh.png" alt="Carpathian Ukrainian banosh with cheese">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-9">Carpathian Banosh</h2>
+        <p class="recipe-card__eyebrow">Creamy Cornmeal Dish</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-9">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-9">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Cornmeal</li>
+            <li>Sour cream or cream</li>
+            <li>Water or milk</li>
+            <li>Bryndza cheese</li>
+            <li>Mushrooms</li>
+            <li>Salt</li>
+            <li>Butter</li>
+            <li>Crispy pork or herbs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-9">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-9">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Warm sour cream with a little water or milk in a heavy pot.</li>
+          <li>Slowly whisk in cornmeal to avoid lumps.</li>
+          <li>Cook gently, stirring often, until thick and creamy.</li>
+          <li>Season with salt and butter.</li>
+          <li>Serve with bryndza cheese, mushrooms, and crispy pork or herbs.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-10" aria-labelledby="popup-recipe-title-10">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-10" popovertargetaction="hide" aria-label="Close Kholodets recipe popup">×</button>
+
+  <div class="recipe-card popup-item-10">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Kholodets.png" alt="Traditional Ukrainian meat jelly called kholodets">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-10">Traditional Kholodets</h2>
+        <p class="recipe-card__eyebrow">Savory Chilled Meat Jelly</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-10">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-10">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Pork or beef bones</li>
+            <li>Meat</li>
+            <li>Carrot</li>
+            <li>Onion</li>
+            <li>Garlic</li>
+            <li>Bay leaf</li>
+            <li>Black peppercorns</li>
+            <li>Salt</li>
+            <li>Horseradish or mustard</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-10">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-10">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Simmer bones and meat slowly with onion, carrot, bay leaf, and peppercorns.</li>
+          <li>Cook until the broth becomes rich and naturally gelatinous.</li>
+          <li>Remove the meat, strain the broth, and add garlic.</li>
+          <li>Arrange meat in dishes and cover with broth.</li>
+          <li>Chill until set and serve with horseradish or mustard.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-11" aria-labelledby="popup-recipe-title-11">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-11" popovertargetaction="hide" aria-label="Close Pea Soup recipe popup">×</button>
+
+  <div class="recipe-card popup-item-11">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Pea-Soup.png" alt="Ukrainian pea soup with vegetables and smoked meat">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-11">Ukrainian Pea Soup</h2>
+        <p class="recipe-card__eyebrow">Hearty Homemade Soup</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-11">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-11">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Split peas</li>
+            <li>Potatoes</li>
+            <li>Carrots</li>
+            <li>Onion</li>
+            <li>Smoked ribs or bacon</li>
+            <li>Garlic</li>
+            <li>Bay leaf</li>
+            <li>Salt and pepper</li>
+            <li>Fresh herbs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-11">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-11">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Rinse split peas and simmer them with bay leaf until soft.</li>
+          <li>Add smoked meat for a deep homemade flavor.</li>
+          <li>Add potatoes, carrots, onion, and garlic.</li>
+          <li>Cook until the vegetables are tender and the soup thickens.</li>
+          <li>Serve hot with herbs and bread.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<div class="popup" popover id="popup-recipe-12" aria-labelledby="popup-recipe-title-12">
+  <button class="btn-close" type="button" popovertarget="popup-recipe-12" popovertargetaction="hide" aria-label="Close Tovkanka recipe popup">×</button>
+
+  <div class="recipe-card popup-item-12">
+    <div class="recipe-card__hero">
+      <div class="recipe-card__media">
+        <img class="recipe-card__img" src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/min/Tovkanka.png" alt="Rustic Ukrainian mashed potato dish called tovkanka">
+      </div>
+
+      <div class="recipe-card__intro">
+        <h2 class="recipe-card__title" id="popup-recipe-title-12">Rustic Tovkanka</h2>
+        <p class="recipe-card__eyebrow">Simple Village Comfort Food</p>
+      </div>
+    </div>
+
+    <div class="recipe-card__content">
+      <section class="recipe-card__section recipe-card__left" aria-labelledby="recipe-ingredients-title-12">
+        <div class="recipe-card__right">
+          <p class="recipe-card__subtitle" id="recipe-ingredients-title-12">Ingredients</p>
+          <ul class="recipe-list recipe-list--bullets">
+            <li>Potatoes</li>
+            <li>Cooked beans</li>
+            <li>Onion</li>
+            <li>Garlic</li>
+            <li>Butter or oil</li>
+            <li>Cracklings or mushrooms</li>
+            <li>Salt and pepper</li>
+            <li>Fresh herbs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="recipe-card__section" aria-labelledby="recipe-steps-title-12">
+        <p class="recipe-card__subtitle" id="recipe-steps-title-12">Steps</p>
+        <ol class="recipe-list recipe-list--steps">
+          <li>Boil potatoes until soft.</li>
+          <li>Fry onion with garlic, cracklings, or mushrooms.</li>
+          <li>Mash potatoes together with cooked beans.</li>
+          <li>Fold in the fried onion mixture and season well.</li>
+          <li>Serve warm as a hearty rustic side or main dish.</li>
+        </ol>
+      </section>
+    </div>
+
+    <a class="recipe-card__button" href="#">Cook Now</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <ul class="social" aria-label="Social links">
+    <li><a href="#" aria-label="Facebook">
+        <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/fb.svg" alt="Facebook">
+      </a></li>
+    <li><a href="#" aria-label="Instagram">
+        <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/instagram.svg" alt="Instagram">
+      </a></li>
+    <li><a href="#" aria-label="X">
+        <img src="https://raw.githubusercontent.com/BlackStar1991/Pictures-for-sharing-/master/ukrainian-cuisine/img/x.svg" alt="X">
+      </a></li>
+  </ul>
+</footer>
+</body>
+</html>
