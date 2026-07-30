@@ -13,7 +13,7 @@ app.use(express.static("public_assets_folder"))// for file that server find in g
 app.use(cors({
     origin:process.env.CORS_ORIGIN
 }))
-app.post("/upload",uplodOnCloudinary("image"),(req,res,next)=>{
+app.post("/upload/img",uplodOnCloudinary("image"),(req,res,next)=>{
 try {
     const {image} = req.body
     const data = User.create({
