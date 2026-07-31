@@ -1,10 +1,10 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import User from "./models/user.medel.js"
+// import User from "./models/user.medel.js"
 // const dotenv=require('dotenv').config()// configratiion in case of require (commonjs)
 import dotenv from 'dotenv'
-const app=express.Router()
+const app=express()
 import { uplodOnCloudinary } from './utils/cloudinary.js'
 
 app.use(express.json())// for allow json in owr server
@@ -13,30 +13,19 @@ app.use(express.static("public_assets_folder"))// for file that server find in g
 app.use(cors({
     origin:process.env.CORS_ORIGIN
 }))
-app.post("/upload/img",uplodOnCloudinary("image"),(req,res,next)=>{
-try {
-    const {image} = req.body
-    const data = User.create({
-        image 
-    })
-    return res.status(200).json({
-        message:"success"
-    })
-} catch (error) {
-    return res.status(200).json({
-        message:error.message
-    })
-}
-
-    
-})
-
 app.use(cookieParser())
 dotenv.config({            // dotenv configration when we import dotenv
     path:'./env'
 })
+app.set("view engine","ejs");
 
-app.listen(process.env.PORT)
+// Routeres
+import UserRouter from "./routes/user.routes.js"
+app.use("/users",UserRouter)
+
+
+
+
 
 
 export {app}

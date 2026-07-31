@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+		body{
+/* 			background-image: url(bg.jpg); */
+      background-image: url("https://images.pexels.com/photos/45241/tent-camp-night-star-45241.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+			background-color: #000;
+			background-repeat: no-repeat;
+			background-size: 1500px 620px;
+			text-align: center;
+			font-size: 22px;
+			color: White;
+		}
+		h1{
+			color: white;
+			font-size: 60px;
+			font-family: cursive;
+		}
+		.form1{
+			background:rgba(0,0,0,0.6);
+			padding: 24px;
+			margin-top:0px;
+			width: 28%;
+			position: absolute;
+			left:34%;
+			border-radius: 15px;
+		}
+		input{
+			width: 330px;
+			height: 30px;
+			border-radius: 7px;
+			text-align: center;
+		}
+		input[type="text"]{
+			font-size: 18px;
+		}
+		input[type="email"]{
+			font-size: 18px;
+		}
+		input[type="submit"]{
+			font-size: 20px;
+			height: 40px;
+			background-color: #00FF7F;
+
+		}
+
+		input[type="submit"]:hover{
+			color:white;	
+			background-color: blue;	
+		}
+		select{
+			size:400px;
+			height: 30px;
+			width: 252px;
+			border-radius: 20px;
+			text-align: center;
+			font-size: 18px;
+		}
+		input[type="radio"]
+		{
+			font-size: 14px;
+			size: 10px;
+			height:12px;
+		}
+    </style>
+</head>
+<body>
+    <html>
+
+<head>
+  <title>Form Validation</title>
+</head>
+<body>
+	<div class="main">
+		<h1>Nightout Trip Registration</h1>
+		<div class="form1">
+		<!--	Registration Form<br>!-->
+			<form name="simple" onsubmit="return empty();" method="post" action="Ass1.php">
+				<input type="text" id="req1" placeholder="Firstname"><br><br>		
+				<!--<input type="text" id="req2" placeholder="Lastname"><br><br>-->
+				<input type="text" id="req3" placeholder="Email address"><br><br>
+				<!--<input type="text" id="req4" placeholder="Contact number" name="phone"><br><br>-->
+				<input type="password" id="req5" placeholder="Password"><br>
+								D.O.B<br><input type="date" name="bday"><br><br>
+	<!--Gender:
+	<br>
+	<input type="radio" name="gender">Male <input type="radio" name="gender">Female-->
+				Gender:
+				<select id="selection">
+					<option>Gender</option>
+					<option>Male</option>
+					<option>Female</option>
+				</select>
+				<br><br>
+				<input type="submit" value="Submit" onclick="emailValidate(document.getElementById('req3'),'Invalid Email id.'),/*isNumeric(document.getElementById('req4'),'Enter digits in contact no.'),*/Selection(document.getElementById('selection'),'Please select gender')">
+
+
+			</form>
+		</div>	
+	</div>
+
+
+</body>
+</html>
+</body>
+</html>
